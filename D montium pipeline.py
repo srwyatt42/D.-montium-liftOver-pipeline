@@ -1,40 +1,63 @@
 #Pipeline for D montium genomes, phylogenetic analysis
 
-genomes = []    #stores genome sequence files
-loci = []       #stores loci sequence files
+input_gene = []       #stores GenBank gene sequence files
+input_chain = []      #stores over.chain files for liftOver
 
-#User input genome(s)
-genome = input("Enter genome file: ")
-genomes.append(genome)
-more_genomes = input("Add another? ")
-#to add multiple genome files
-if more_genomes == "y":
-    y = input("Enter genome file: ")
-    genomes.append(y)
-    more_genomes = input("Add another? ")
-if more_genomes == "n":
-    print("File(s) added")
-    print(genomes)
-
-#User input gene sequence(s)
-locus = input("Enter gene sequence file: ")
-loci.append(locus)
-more_loci = input("Add another? ")
+#User input gene sequence(s); sequences need to be in known genome like Dmel
+gene = input("Enter gene sequence file: ")
+input_gene.append(gene)
+more_gene = input("Add another? ")
 #to add mutliple gene sequence files
-if more_loci == "y":
-    y = input("Enter genome file: ")
-    loci.append(y)
-    more_loci = input("Add another? ")
-if more_loci == "n":
+if more_gene == "y":
+    y = input("Enter gene sequence file: ")
+    input_gene.append(y)
+    more_gene = input("Add another? ")
+if more_gene == "n":
     print("File(s) added")
-    print(loci)
+    print(input_gene)
+
+#User input over.chain file(s); example Dmel_to_Dmontium.over.chain
+chain = input("Enter over.chain file: ")
+input_chain.append(chain)
+more_chain = input("Add another? ")
+#to add mutliple over.chain files
+if more_chain == "y":
+    y = input("Enter chain file: ")
+    input_chain.append(y)
+    more_chain = input("Add another? ")
+if more_chain == "n":
+    print("File(s) added")
+    print(input_chain)
+
+import subprocess   #allows python to run Unix commands
+
+#GenBank to GFF in Unix
+gff_gene = []
+for file in input_gene:
+    filename.gbk = input_gene[file]
+#perl genbank2gff3.pl -f GenBank filename.gbk -out stdout > filename.gff3
+#append to gff gene list
+
+#GFF to Bed in Unix
+bed_gene = []
+for file in gff_gene:
+    inputfile.gff = gff_gene[file]
+#gff2bed < inputfile.gff > outputfile.bed
+#append to bed gene list
 
 
-#Convert file to BED format
 
-#Pipe to liftOver application to find loci in each genome
+#Pipe to liftOver application to find gene in each genome; example Dmel gene sequence would be found in Dmontium 
     #liftOver needs to be installed on user's computer
     #Path will be specified here; include in README
-#liftOver outputs chain files of loci in each genome
-
-#Convert files into FASTA format for use in other programs (alignment, etc)
+    #All sequence and chain files should be included in the same place as liftOver
+liftOver_output = []        #Stores lifted output BED files
+for file in input_chain:
+    input_file.over.chain = input_chain[file]
+    for file in bed_gene:
+        input_file.bed = bed_gene[file]
+        #feed to liftover via subprocess
+        liftOver_output.append(subprocess.check_output("liftover -minMatch=0.1 -multiple input_file.bed input_file.over.chain output_file.bed unMapped"))
+print(liftOver_output)
+    
+#liftOver outputs bed files of the gene in another genome
