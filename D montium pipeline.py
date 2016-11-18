@@ -30,20 +30,24 @@ if more_chain == "n":
     print(input_chain)
 
 import subprocess   #allows python to run Unix commands
-
+#cd to folder with all the files
+subprocess.call(['cd', 'C:\Users\Sydney\Desktop']) #INSERT REAL PATH LATER
 #GenBank to GFF in Unix
 gff_gene = []
 for file in input_gene:
     filename.gbk = input_gene[file]
+    gff_gene.append(subprocess.call(['perl', 'genbank2gff3.pl', '-f', 'GenBank', 'filename.gbk', '-out', 'stdout', '>', 'filename.gff3']))
 #perl genbank2gff3.pl -f GenBank filename.gbk -out stdout > filename.gff3
-#append to gff gene list
+print(gff_gene)
 
 #GFF to Bed in Unix
 bed_gene = []
 for file in gff_gene:
     inputfile.gff = gff_gene[file]
+    bed_gene.append(subprocess.call(['gff2bed', '<', 'inputfile.gff', '>', 'outputfile.bed']))
 #gff2bed < inputfile.gff > outputfile.bed
-#append to bed gene list
+print(bed_gene)
+
 
 
 
@@ -57,7 +61,7 @@ for file in input_chain:
     for file in bed_gene:
         input_file.bed = bed_gene[file]
         #feed to liftover via subprocess
-        liftOver_output.append(subprocess.check_output("liftover -minMatch=0.1 -multiple input_file.bed input_file.over.chain output_file.bed unMapped"))
+        liftOver_output.append(subprocess.call(['liftover', '-minMatch=0.1', '-multiple', 'input_file.bed', 'input_file.over.chain', 'output_file.bed', 'unMapped']))
 print(liftOver_output)
     
 #liftOver outputs bed files of the gene in another genome
