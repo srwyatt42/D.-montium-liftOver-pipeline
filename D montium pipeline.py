@@ -27,7 +27,6 @@ import subprocess   #allows python to run Unix commands
 #Example Dmel gene sequence would be found in Dmont
 from os import rename
 from os import listdir
-x=0
 
 for name in input_chain:
     with open(name) as f:
@@ -47,5 +46,4 @@ for name in input_chain:
             for fname in fnames:
                 if fname.startswith(badprefix):
                     rename(fname, fname.replace(badprefix, ''.join([chainfilename, genefilename])))
-    x+=1
 #liftOver outputs bed files of the gene in another genome
