@@ -12,20 +12,16 @@ input_alignment = []  #stores Fasta files for conversion after liftOver
 import glob
 
 #collect .over.chain files
-for chainfilename in glob.iglob('*.over.chain'):   #Insert PATH
+for chainfilename in glob.iglob('*.over.chain'):
     input_chain.append('%s' % chainfilename)
-print(input_chain)
-
 
 #collect .bed files
-for genefilename in glob.iglob('*.bed'):       #Insert PATH
+for genefilename in glob.iglob('*.bed'):
     input_gene.append('%s' % genefilename)
-print(input_gene)
 
 #collect .fa files
-for fafilename in glob.iglob('*.fa'):           #Insert PATH
+for fafilename in glob.iglob('*.fa'):
     input_alignment.append('%s' % fafilename)
-print(input_alignment)
 
 import subprocess   #allows python to run Unix commands
 
@@ -51,12 +47,15 @@ for faname, chainname in zip(input_alignment, input_chain):
             bed_input.write(f.read())
             bed_input.close()
             subprocess.call(['./liftOver', '-minMatch=0.1', '-multiple', 'bed_input.bed', 'chain_input.over.chain', 'output.bed', 'output.unMapped.bed'])
-            #liftOver outputs a bed file with the genes found in new alignment/species
-            #Convert output.bed to output.fa using bedtools
-            subprocess.call(['./bedtools', 'getfasta', '-fi', 'alignment.fa', '-bed', 'output.bed', '-name', '-fo', 'output.fa'])
-            #Rename output.fa to include fa and gene names
-            badprefix = 'output'
-            fnames = listdir('.')
-            for fname in fnames:
-                if fname.startswith(badprefix):
-                    rename(fname, fname.replace(badprefix, ''.join([faname, genename])))
+        #liftOver outputs a bed file with the genes found in new alignment/species
+        #Convert output.bed to output.fa using bedtools
+        subprocess.call(['./bedtools', 'getfasta', '-fi', 'alignment.fa', '-bed', 'output.bed', '-name', '-fo', 'output.fa'])
+        #Delete .fai file so bedtools will write a new one each time
+        files = [i for i in glob.iglob('*.fai')]
+        subprocess.call(['rm', '-r'] + files)
+        #Rename output.fa to include fa and gene names
+        badprefix = 'output'
+        fnames = listdir('.')
+        for fname in fnames:
+            if fname.startswith(badprefix):
+                rename(fname, fname.replace(badprefix, ''.join([faname, genename])))
