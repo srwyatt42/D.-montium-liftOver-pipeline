@@ -9,6 +9,8 @@
 
 #The bedtools application is used to create a Fasta file from the liftOver output using the getfasta command. This command takes a Fasta genome assembly input and the BED file output from liftOver to create a Fasta file of the gene sequences in the new organism. Following the example from above, this code returns a Fasta file of D serrata gene sequences when given the D serrata BED file and the D serrata Fasta genome assembly file.
 
+#To use this pipeline, please download the Python script. It can be run in two different ways: on the command line by calling python and then this script, or, if the script is open on the desktop, it can be fun using F5 or by selecting "Run" from the menu.
+
 #Some things to note:
 #1. It is imperative that this script, BED files, chain files, Fasta files, the liftOver application, and the bedtools application are located in the same directory.
 #2. To download liftOver, UCSC Genome Browser offers a Mac OSX application and a Unix application. I would suggest using the Linux application because it comes with many other Unix applications that may be useful for other research.
